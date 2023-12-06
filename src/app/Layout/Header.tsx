@@ -4,7 +4,7 @@ import { Container } from '../../styled/components';
 import { Link } from 'react-router-dom';
 import { $primaryColor } from '../../styled/variables';
 import { Button } from '../../components/form/Button';
-import { LOGIN_ROUTE, PROFILE_ROUTE } from '../../utils/consts';
+import { PROFILE_ROUTE } from '../../utils/consts';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalAuth } from '../../components/modal/ModalAuth';
 import { ModalArticle } from '../../components/modal/ModalArticle';
@@ -20,15 +20,13 @@ export const Header: FC = () => {
             <ModalControl id="article" modal={<ModalArticle />}>
               <Button whiteBorder>Разместить объявление</Button>
             </ModalControl>
-            <Button as={Link} to={PROFILE_ROUTE} whiteBorder>
-              Личный кабинет
-            </Button>
+            <Link to={PROFILE_ROUTE}>
+              <Button whiteBorder>Личный кабинет</Button>
+            </Link>
           </>
         ) : (
           <ModalControl id="auth" modal={<ModalAuth />}>
-            <Button as={Link} to={LOGIN_ROUTE} whiteBorder>
-              Вход в личный кабинет
-            </Button>
+            <Button whiteBorder>Вход в личный кабинет</Button>
           </ModalControl>
         )}
       </MyContainer>

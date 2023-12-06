@@ -4,9 +4,6 @@ import { IconLoader } from '../../icons';
 import { fadeIn } from '../../styled/animations';
 import { css } from '@emotion/react';
 import { $primaryColor, $primaryHoverColor } from '../../styled/variables';
-import { Link } from 'react-router-dom';
-
-type LinkProps = React.ComponentPropsWithoutRef<typeof Link>;
 
 type Props = {
   as?: ElementType;
@@ -15,28 +12,18 @@ type Props = {
   fitContent?: boolean;
   secondary?: boolean;
   whiteBorder?: boolean;
-} & ButtonHTMLAttributes<HTMLButtonElement> &
-  Partial<LinkProps>;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
-  const {
-    children,
-    pending,
-    secondary,
-    fitContent = true,
-    whiteBorder,
-    as: Component = 'button',
-    ...rest
-  } = props;
+  const { children, pending, secondary, fitContent = true, whiteBorder, ...rest } = props;
   return (
     <Wrapper
       {...rest}
-      as={Component}
       ref={ref}
       $pending={pending}
-      $whiteBorder={whiteBorder}
+      $whiteborder={whiteBorder}
       $secondary={secondary}
-      $fitContent={fitContent}>
+      $fitcontent={fitContent}>
       {pending && <IconLoader />}
       <span>{children}</span>
     </Wrapper>
@@ -45,12 +32,12 @@ export const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
 
 const Wrapper = styled.button<{
   $pending?: boolean;
-  $fitContent?: boolean;
+  $fitcontent?: boolean;
   $secondary?: boolean;
-  $whiteBorder?: boolean;
+  $whiteborder?: boolean;
 }>`
   cursor: pointer;
-  width: ${({ $fitContent }) => ($fitContent ? 'fit-content' : '100%')};
+  width: ${({ $fitcontent }) => ($fitcontent ? 'fit-content' : '100%')};
   padding: 0.8125rem 2.3125rem;
   color: #fff;
   font-family: 'Roboto', sans-serif;
@@ -81,8 +68,8 @@ const Wrapper = styled.button<{
     transition: opacity 0.3s;
   }
 
-  ${({ $whiteBorder }) =>
-    $whiteBorder &&
+  ${({ $whiteborder }) =>
+    $whiteborder &&
     css`
       padding: 0.5rem 1.5rem;
       border: 0.0625rem solid #fff;
