@@ -23,7 +23,11 @@ export const ModalArticle: FC = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<TForm>();
+  } = useForm<TForm>({
+    defaultValues: {
+      images: [null, null, null],
+    },
+  });
 
   const onSubmit = (data: TForm) => {
     console.log(data);
