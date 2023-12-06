@@ -21,9 +21,12 @@ export const Navigate: FC = () => {
           <Button>Найти</Button>
         </>
       ) : (
-        <Button as={Link} to={MAIN_ROUTE}>
+        <Link to={MAIN_ROUTE}>
+        <Button>
           Вернуться на главную
         </Button>
+        </Link>
+        
       )}
     </Wrapper>
   );
