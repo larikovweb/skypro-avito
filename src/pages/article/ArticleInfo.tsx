@@ -3,6 +3,8 @@ import { GeneralImg } from '../../styled/components';
 import styled from '@emotion/styled';
 import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled/variables';
 import { Button } from '../../components/form/Button';
+import { ModalControl } from '../../components/modal/ModalControl';
+import { ModalFeedback } from '../../components/modal/ModalFeedback';
 
 export const ArticleInfo: FC = () => {
   return (
@@ -12,7 +14,9 @@ export const ArticleInfo: FC = () => {
         <li>Сегодня в 10:45</li>
         <li>Санкт-Петербург</li>
       </InfoList>
-      <Feedback>23 отзыва</Feedback>
+      <ModalControl id="feedback" modal={<ModalFeedback />}>
+        <Feedback>23 отзыва</Feedback>
+      </ModalControl>
       <Price>2 200 ₽</Price>
       <MyButton>
         <b>Показать телефон</b>

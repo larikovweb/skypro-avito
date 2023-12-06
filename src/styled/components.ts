@@ -32,3 +32,49 @@ export const GeneralImg = styled.img`
   object-fit: cover;
   object-position: center;
 `;
+
+export const GeneralScroll = styled.div`
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: rgba(25, 25, 28, 0.2) rgba(25, 25, 28, 0.15); /* «цвет ползунка» «цвет полосы скроллбара» */
+  scrollbar-width: thin;
+  padding-right: 0.75rem;
+  &::-webkit-scrollbar {
+    width: 0.25rem;
+    height: 0;
+    background-color: rgba(25, 25, 28, 0.15);
+    border-radius: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(25, 25, 28, 0.2);
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(25, 25, 28, 0.3);
+  }
+
+  /* Стрелки */
+  &::-webkit-scrollbar-button:vertical:start:decrement {
+    background: transparent;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-button:vertical:end:increment {
+    background: transparent;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-button:horizontal:start:decrement {
+    background: transparent;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-button:horizontal:end:increment {
+    background: transparent;
+    display: none;
+  }
+`;

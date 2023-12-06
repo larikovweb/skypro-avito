@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { FC } from 'react';
 import { FadeTransition } from '../animations/Transitions';
+import { GeneralSubtitle } from '../../styled/components';
+import { IconClose } from '../../icons';
+import { $primaryColor } from '../../styled/variables';
 
 type Props = {
   open?: boolean;
@@ -16,6 +19,20 @@ export const ModalOverlay: FC<Props> = ({ open = false, children, setOpen }) => 
         <Content>{children}</Content>
       </Wrapper>
     </FadeTransition>
+  );
+};
+
+export const ModalHead: FC<{ children: React.ReactNode; close: () => void }> = ({
+  children,
+  close,
+}) => {
+  return (
+    <Head>
+      <GeneralSubtitle>{children}</GeneralSubtitle>
+      <Close onClick={close}>
+        <IconClose />
+      </Close>
+    </Head>
   );
 };
 
@@ -44,4 +61,32 @@ const Content = styled.div`
   position: relative;
   border-radius: 0.75rem;
   background: #fff;
+  max-height: 100vh;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    opacity: 0;
+  }
+`;
+
+const Head = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Close = styled.div`
+  cursor: pointer;
+  svg {
+    width: 2.6875rem;
+    height: 2.6875rem;
+    stroke: rgba(217, 217, 217, 1);
+    transition: stroke 0.3s;
+  }
+  &:hover {
+    svg {
+      stroke: ${$primaryColor};
+    }
+  }
 `;

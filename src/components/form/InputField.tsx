@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { $dangerColor } from '../../styled/variables';
 
 type Props = {
-  label?: string;
+  label?: string | React.ReactNode;
   children: React.ReactNode;
   error?: string;
   borderBottom?: boolean;
@@ -29,6 +29,7 @@ const Content = styled.div<{ $error: boolean; $borderBottom?: boolean }>`
   > * {
     color: ${({ $error }) => ($error ? $dangerColor : 'inherit')};
     width: 100%;
+    height: 100%;
   }
   ${({ $borderBottom }) => $borderBottom && `border-radius: 0;`}
   ${({ $borderBottom }) => $borderBottom && `border: none;`}

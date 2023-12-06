@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { ElementType, InputHTMLAttributes, forwardRef } from 'react';
 
 type Props = {
+  as?: ElementType;
   bottomType?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
@@ -24,6 +25,7 @@ const InputField = styled.input<{ $bottomType?: boolean }>`
   font-weight: 400;
   line-height: 150%;
   outline: none;
+  resize: vertical;
   transition: border 0.3s;
   ${({ $bottomType }) =>
     $bottomType &&

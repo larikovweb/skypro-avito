@@ -7,6 +7,7 @@ import { Button } from '../../components/form/Button';
 import { LOGIN_ROUTE, PROFILE_ROUTE } from '../../utils/consts';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalAuth } from '../../components/modal/ModalAuth';
+import { ModalArticle } from '../../components/modal/ModalArticle';
 
 export const Header: FC = () => {
   const isAuth = true;
@@ -16,7 +17,7 @@ export const Header: FC = () => {
       <MyContainer>
         {isAuth ? (
           <>
-            <ModalControl id="auth" modal={<ModalAuth />}>
+            <ModalControl id="article" modal={<ModalArticle />}>
               <Button whiteBorder>Разместить объявление</Button>
             </ModalControl>
             <Button as={Link} to={PROFILE_ROUTE} whiteBorder>
@@ -24,9 +25,11 @@ export const Header: FC = () => {
             </Button>
           </>
         ) : (
-          <Button as={Link} to={LOGIN_ROUTE} whiteBorder>
-            Вход в личный кабинет
-          </Button>
+          <ModalControl id="auth" modal={<ModalAuth />}>
+            <Button as={Link} to={LOGIN_ROUTE} whiteBorder>
+              Вход в личный кабинет
+            </Button>
+          </ModalControl>
         )}
       </MyContainer>
     </Wrapper>
