@@ -4,11 +4,11 @@ import styled from '@emotion/styled';
 import { $dangerColor } from '../../styled/variables';
 
 type Props = {
-  resetImage: () => void;
+  getFile: (file: File | null) => void;
 };
 
 export const UploadImage = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { resetImage, ...rest } = props;
+  const { getFile, ...rest } = props;
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,12 +19,14 @@ export const UploadImage = forwardRef<HTMLInputElement, Props>((props, ref) => {
         setImageSrc(e.target?.result as string);
       };
       reader.readAsDataURL(file);
+      getFile(file);
+      return;
     }
   };
 
   const clearImage = () => {
     setImageSrc(null);
-    resetImage();
+    getFile(null);
   };
 
   return (

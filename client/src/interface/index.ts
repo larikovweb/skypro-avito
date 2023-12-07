@@ -26,3 +26,5 @@ export interface IArticle {
   user: IUser;
   user_id: number;
 }
+
+export type TFields = Record<string, string | number>;

@@ -14,8 +14,6 @@ export const ArticleCard: FC<Props> = (props) => {
   const { article } = props;
   const { id, title, price, user, images, created_on } = article;
 
-  console.log(images);
-
   return (
     <Wrapper to={`${ARTICLE_ROUTE}/${id}`}>
       <Image>

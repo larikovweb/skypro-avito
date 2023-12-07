@@ -11,7 +11,6 @@ const Main: FC = () => {
     return <div>Loading...</div>;
   }
 
-  console.log(articles);
   return (
     <>
       <HelmetHead title="Заголовок Главной" descr="Описание Главной" />

@@ -5,36 +5,46 @@ import { InputField } from '../form/InputField';
 import { Input } from '../form/Input';
 import { Button } from '../form/Button';
 import styled from '@emotion/styled';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { UploadImage } from '../form/UploadImage';
 import { articleAPI } from '../../redux/services/articleService';
+import { useAuth } from '../../hooks/useAuth';
+import { isNull } from '@bunt/is';
 
 type TForm = {
-  name: string;
+  title: string;
   description: string;
   price: number;
-  images: File[] | null[];
+  images: File[] | null;
 };
 
 export const ModalArticle: FC = () => {
   const { close } = useModal('article');
   const [createArticle] = articleAPI.useCreateArticleMutation();
+  const { refreshAuthToken } = useAuth();
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<TForm>({
     defaultValues: {
-      images: [null, null, null],
+      images: null,
     },
   });
 
   const onSubmit = async (data: TForm) => {
+    await refreshAuthToken();
+    const { title, description, price, images } = data;
     console.log(data);
+    if (isNull(images)) {
+      return;
+    }
+    const files = images.filter((image): image is File => image instanceof File);
+    const fields = { title, description, price };
     try {
-      await createArticle(data).unwrap();
+      await createArticle({ files, fields }).unwrap();
       close();
     } catch (error) {
       console.log(error);
@@ -45,9 +55,9 @@ export const ModalArticle: FC = () => {
     <Wrapper>
       <ModalHead close={close}>Новое объявление</ModalHead>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <InputField error={errors.name?.message} label="Название">
+        <InputField error={errors.title?.message} label="Название">
           <Input
-            {...register('name', { required: 'Поле не может быть пустым' })}
+            {...register('title', { required: 'Поле не может быть пустым' })}
             placeholder="Введите название"
           />
         </InputField>
@@ -67,10 +77,18 @@ export const ModalArticle: FC = () => {
           }>
           <Images>
             {[...Array(5)].map((_, index) => (
-              <UploadImage
-                {...register(`images.${index}`)}
-                resetImage={() => setValue(`images.${index}`, null)}
+              <Controller
                 key={index}
+                control={control}
+                name={`images.${index}`}
+                render={({ field: { onChange } }) => (
+                  <UploadImage
+                    getFile={(file) => {
+                      console.log(file);
+                      onChange(file);
+                    }}
+                  />
+                )}
               />
             ))}
           </Images>
