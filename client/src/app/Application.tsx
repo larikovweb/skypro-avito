@@ -14,16 +14,22 @@ const Application: FC = () => {
       <GlobalStyles />
       <Provider store={store}>
         <BrowserRouter>
-          <Routes>
-            <Route element={<Layout />}>
-              {publicRoutes.map(({ path, component }) => (
-                <Route key={path} path={path} element={component} />
-              ))}
-            </Route>
-          </Routes>
+          <RouteSelect />
         </BrowserRouter>
       </Provider>
     </>
+  );
+};
+
+const RouteSelect = () => {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        {publicRoutes.map(({ path, component }) => (
+          <Route key={path} path={path} element={component} />
+        ))}
+      </Route>
+    </Routes>
   );
 };
 

@@ -7,6 +7,7 @@ import { Button } from '../form/Button';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
 import { UploadImage } from '../form/UploadImage';
+import { articleAPI } from '../../redux/services/articleService';
 
 type TForm = {
   name: string;
@@ -17,6 +18,7 @@ type TForm = {
 
 export const ModalArticle: FC = () => {
   const { close } = useModal('article');
+  const [createArticle] = articleAPI.useCreateArticleMutation();
 
   const {
     register,
@@ -29,8 +31,14 @@ export const ModalArticle: FC = () => {
     },
   });
 
-  const onSubmit = (data: TForm) => {
+  const onSubmit = async (data: TForm) => {
     console.log(data);
+    try {
+      await createArticle(data).unwrap();
+      close();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CSSTransition, TransitionStatus } from 'react-transition-group';
 
-const staticDuration = 350;
+const staticDuration = 200;
 
 const defaultStyle = {
   transition: `all ${staticDuration}ms ease-in-out`,

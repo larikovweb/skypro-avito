@@ -36,6 +36,7 @@ const Wrapper = styled.button<{
   $secondary?: boolean;
   $whiteborder?: boolean;
 }>`
+  position: relative;
   cursor: pointer;
   width: ${({ $fitcontent }) => ($fitcontent ? 'fit-content' : '100%')};
   padding: 0.8125rem 2.3125rem;
@@ -59,8 +60,12 @@ const Wrapper = styled.button<{
     background-color: #d9d9d9;
   }
   svg {
-    width: 7.5rem;
-    height: 1.875rem;
+    width: 3rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     animation: ${fadeIn} 0.3s;
   }
   span {

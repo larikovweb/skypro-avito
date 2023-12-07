@@ -5,6 +5,9 @@ import { InputField } from '../form/InputField';
 import { Button } from '../form/Button';
 import styled from '@emotion/styled';
 import { useForm } from 'react-hook-form';
+import { authAPI } from '../../redux/services/authService';
+import { setCredentials } from '../../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 type TForm = {
   email: string;
@@ -16,7 +19,13 @@ type TForm = {
 };
 
 export const ModalAuth: FC = () => {
-  const [isRegister, setIsRegister] = useState(true);
+  const [isRegister, setIsRegister] = useState(false);
+  const dispatch = useDispatch();
+  const [registerUser, { status: registerStatus }] = authAPI.useRegisterMutation();
+  const [loginUser, { status: loginStatus }] = authAPI.useLoginMutation();
+
+  const isLoading = registerStatus === 'pending' || loginStatus === 'pending';
+
   const {
     register,
     handleSubmit,
@@ -24,8 +33,28 @@ export const ModalAuth: FC = () => {
     getValues,
   } = useForm<TForm>();
 
-  const onSubmit = (data: TForm) => {
-    console.log(data);
+  const onSubmit = async (data: TForm) => {
+    if (isRegister) {
+      try {
+        await registerUser(data).unwrap();
+        setIsRegister(false);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const result = await loginUser(data).unwrap();
+        const { access_token, refresh_token } = result;
+        dispatch(
+          setCredentials({
+            accessToken: access_token,
+            refreshToken: refresh_token,
+          }),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -137,7 +166,9 @@ export const ModalAuth: FC = () => {
             </InputField>
           </>
         )}
-        <Button fitContent={false}>{isRegister ? 'Зарегистрироваться' : 'Войти'}</Button>
+        <Button pending={isLoading} type="submit" fitContent={false}>
+          {isRegister ? 'Зарегистрироваться' : 'Войти'}
+        </Button>
       </Form>
       <Button onClick={() => setIsRegister((state) => !state)} secondary fitContent={false}>
         {isRegister ? 'Войти' : 'Зарегистрироваться'}

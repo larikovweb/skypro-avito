@@ -8,9 +8,10 @@ import { PROFILE_ROUTE } from '../../utils/consts';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalAuth } from '../../components/modal/ModalAuth';
 import { ModalArticle } from '../../components/modal/ModalArticle';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Header: FC = () => {
-  const isAuth = true;
+  const { isAuth, logout } = useAuth();
 
   return (
     <Wrapper>
@@ -23,6 +24,9 @@ export const Header: FC = () => {
             <Link to={PROFILE_ROUTE}>
               <Button whiteBorder>Личный кабинет</Button>
             </Link>
+            <Button whiteBorder onClick={logout}>
+              Выйти
+            </Button>
           </>
         ) : (
           <ModalControl id="auth" modal={<ModalAuth />}>

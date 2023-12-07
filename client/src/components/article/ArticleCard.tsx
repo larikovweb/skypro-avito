@@ -4,26 +4,31 @@ import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled
 import { Link } from 'react-router-dom';
 import { ARTICLE_ROUTE } from '../../utils/consts';
 import { GeneralImg } from '../../styled/components';
+import { IArticle } from '../../interface';
 
 type Props = {
-  id: string;
+  article: IArticle;
 };
 
 export const ArticleCard: FC<Props> = (props) => {
-  const { id } = props;
+  const { article } = props;
+  const { id, title, price, user, images, created_on } = article;
+
+  console.log(images);
+
   return (
     <Wrapper to={`${ARTICLE_ROUTE}/${id}`}>
       <Image>
         <GeneralImg
-          src="https://alterainvest.ru/upload/iblock/f3e/f3e85c532e10881862a5e3c576599a14.jpg"
+          src={images.length > 0 ? `http://localhost:8090/${images[0].url}` : ''}
           alt=""
         />
       </Image>
-      <Title>Ракетка для большого тенниса Triumph Pro ST...</Title>
-      <Price>2 200 ₽</Price>
+      <Title>{title}</Title>
+      <Price>{price} ₽</Price>
       <InfoList>
-        <li>Санкт Петербург</li>
-        <li>Сегодня в 10:45</li>
+        <li>{user.city}</li>
+        <li>{created_on.slice(0, 10)}</li>
       </InfoList>
     </Wrapper>
   );

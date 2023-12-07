@@ -4,8 +4,11 @@ import styled from '@emotion/styled';
 import { HelmetHead } from '../../components/seo/HelmetHead';
 import { ProfileSettings } from './ProfileSettings';
 import { ArticleCardList } from '../../components/article/ArticleCardList';
+import { articleAPI } from '../../redux/services/articleService';
 
 const Profile: FC = () => {
+  const { data: articles } = articleAPI.useGetArticlesQuery({});
+
   return (
     <>
       <HelmetHead title="Настройки профиля" descr="Настройки профиля" />
@@ -13,7 +16,7 @@ const Profile: FC = () => {
         <GeneralTitle>Здравствуйте, Антон!</GeneralTitle>
         <ProfileSettings />
         <SubTitle>Мои товары</SubTitle>
-        <ArticleCardList />
+        <ArticleCardList articles={articles} />
       </Container>
     </>
   );

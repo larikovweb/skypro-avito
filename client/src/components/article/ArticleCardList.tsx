@@ -1,13 +1,18 @@
 import { FC } from 'react';
 import { ArticleCard } from './ArticleCard';
 import styled from '@emotion/styled';
+import { IArticle } from '../../interface';
 
-export const ArticleCardList: FC = () => {
-  const articles = [...new Array(6)];
+type Props = {
+  articles: IArticle[];
+};
+
+export const ArticleCardList: FC<Props> = (props) => {
+  const { articles } = props;
   return (
     <Wrapper>
-      {articles.map((_, index) => (
-        <ArticleCard key={index} id={index.toString()} />
+      {articles.map((article, index) => (
+        <ArticleCard article={article} key={index} />
       ))}
     </Wrapper>
   );
