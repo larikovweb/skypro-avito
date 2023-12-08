@@ -1,4 +1,3 @@
-// client/src/hooks/useAuth.ts
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';

@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 import { Controller, useForm } from 'react-hook-form';
 import { UploadImage } from '../form/UploadImage';
 import { articleAPI } from '../../redux/services/articleService';
-import { useAuth } from '../../hooks/useAuth';
 import { isNull } from '@bunt/is';
 
 type TForm = {
@@ -21,7 +20,6 @@ type TForm = {
 export const ModalArticle: FC = () => {
   const { close } = useModal('article');
   const [createArticle] = articleAPI.useCreateArticleMutation();
-  const { refreshAuthToken } = useAuth();
 
   const {
     control,
@@ -35,7 +33,6 @@ export const ModalArticle: FC = () => {
   });
 
   const onSubmit = async (data: TForm) => {
-    await refreshAuthToken();
     const { title, description, price, images } = data;
     console.log(data);
     if (isNull(images)) {

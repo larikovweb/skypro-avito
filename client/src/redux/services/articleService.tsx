@@ -1,22 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../store';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { IArticle, TFields } from '../../interface';
 import { createQueryString } from '../../helpers/api';
-import { SERVER_URL } from '../../utils/consts';
+import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
 export const articleAPI = createApi({
   reducerPath: 'articleAPI',
-  baseQuery: fetchBaseQuery({
-    baseUrl: SERVER_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.accessToken;
-
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['Article'],
   endpoints: (build) => ({
     getArticles: build.query<IArticle[], { user_id?: string; sorting?: string; page?: number }>({
