@@ -5,6 +5,7 @@ import { baseQueryWithReauth } from '../baseQueryWithReauth';
 export const userAPI = createApi({
   reducerPath: 'userAPI',
   baseQuery: baseQueryWithReauth,
+  tagTypes: ['User'],
   endpoints: (build) => ({
     getUsers: build.query<IUser[], unknown>({
       query: () => ({
@@ -17,18 +18,32 @@ export const userAPI = createApi({
         url: '/user/',
         method: 'GET',
       }),
+      providesTags: () => [{ type: 'User', id: 'USER' }],
     }),
-    updateActiveUser: build.mutation<IUser, IUser>({
+    updateActiveUser: build.mutation<
+      IUser,
+      {
+        role?: string;
+        name?: string;
+        email: string;
+        surname?: string;
+        phone?: string;
+        city?: string;
+      }
+    >({
       query: (credentials) => ({
         url: '/user/',
         method: 'PATCH',
         body: credentials,
       }),
+      invalidatesTags: () => [{ type: 'User', id: 'USER' }],
     }),
-    uploadAvatarUser: build.mutation<IUser, File>({
+    uploadAvatarUser: build.mutation<IUser, File | null>({
       query: (credentials) => {
         const formData = new FormData();
-        formData.append('file', credentials);
+        if (credentials) {
+          formData.append('file', credentials);
+        }
 
         return {
           url: '/user/avatar/',
@@ -36,6 +51,7 @@ export const userAPI = createApi({
           body: formData,
         };
       },
+      invalidatesTags: () => [{ type: 'User', id: 'USER' }],
     }),
   }),
 });

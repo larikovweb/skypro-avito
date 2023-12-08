@@ -3,8 +3,8 @@ import { FC } from 'react';
 import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled/variables';
 import { Link } from 'react-router-dom';
 import { ARTICLE_ROUTE } from '../../utils/consts';
-import { GeneralImg } from '../../styled/components';
 import { IArticle } from '../../interface';
+import { CheckImage } from '../img/CheckImage';
 
 type Props = {
   article: IArticle;
@@ -16,12 +16,7 @@ export const ArticleCard: FC<Props> = (props) => {
 
   return (
     <Wrapper to={`${ARTICLE_ROUTE}/${id}`}>
-      <Image>
-        <GeneralImg
-          src={images.length > 0 ? `http://localhost:8090/${images[0].url}` : ''}
-          alt=""
-        />
-      </Image>
+      <CheckImage src={images[0] ? images[0].url : null} size="16.875rem" />
       <Title>{title}</Title>
       <Price>{price} ₽</Price>
       <InfoList>
@@ -48,14 +43,6 @@ const Wrapper = styled(Link)`
       transform: scale(1.025);
     }
   }
-`;
-
-const Image = styled.div`
-  position: relative;
-  height: 16.875rem;
-  background-color: #f0f0f0;
-  margin-bottom: 1.25rem;
-  overflow: hidden;
 `;
 
 const Title = styled.strong`

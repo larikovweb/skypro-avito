@@ -6,35 +6,54 @@ import { Input } from '../../components/form/Input';
 import styled from '@emotion/styled';
 import { Button } from '../../components/form/Button';
 import { useForm } from 'react-hook-form';
+import { IUser } from '../../interface';
+import { userAPI } from '../../redux/services/userService';
 
-type TForm = {
-  name?: string;
-  surname?: string;
-  city?: string;
-  phone: string;
-  email: string;
+type Props = {
+  user: IUser;
 };
 
-export const ProfileSettings: FC = () => {
+export const ProfileSettings: FC<Props> = (props) => {
+  const { user } = props;
+  const { name, surname, city, phone, email } = user;
+  const [updateUser, { status }] = userAPI.useUpdateActiveUserMutation();
+  const [uploadAvatar] = userAPI.useUploadAvatarUserMutation();
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<TForm>();
+    formState: { errors, isDirty },
+  } = useForm<IUser>({
+    defaultValues: {
+      name,
+      surname,
+      city,
+      phone,
+      email,
+    },
+  });
 
-  const onSubmit = (data: TForm) => {
+  const onSubmit = async (data: IUser) => {
     console.log(data);
+
+    try {
+      await updateUser(data).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
       <Title>Настройки профиля</Title>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <UploadAvatar />
+        <UploadAvatar avatar={user.avatar} getFile={(img) => uploadAvatar(img).unwrap()} />
         <Inputs>
           <Row>
             <InputField label="Имя" error={errors.name?.message}>
-              <Input {...register('name')} placeholder="Введите имя" />
+              <Input
+                {...register('name', { required: 'Это поле обязательно' })}
+                placeholder="Введите имя"
+              />
             </InputField>
             <InputField label="Фамилия" error={errors.surname?.message}>
               <Input {...register('surname')} placeholder="Введите фамилию" />
@@ -78,7 +97,9 @@ export const ProfileSettings: FC = () => {
               />
             </InputField>
           </Row>
-          <Button type="submit">Сохранить</Button>
+          <Button disabled={!isDirty} pending={status === 'pending'} type="submit">
+            Сохранить
+          </Button>
         </Inputs>
       </Form>
     </>

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { FC } from 'react';
-import { GeneralImg } from '../../styled/components';
 import { $primaryColor } from '../../styled/variables';
 import { IImage } from '../../interface';
+import { CheckImage } from '../../components/img/CheckImage';
 
 type Props = {
   images: IImage[];
@@ -13,13 +13,11 @@ export const ArticleGallery: FC<Props> = (props) => {
 
   return (
     <Wrapper>
-      <MainImg>
-        <GeneralImg src={`http://localhost:8090/${images[0].url}`} alt="" />
-      </MainImg>
+      <CheckImage src={images[0] ? images[0].url : null} size="30rem" />
       <Thumbnails>
         {images.map((image, index) => (
           <Thumbnail $active={index === 0} key={image.id}>
-            <GeneralImg src={`http://localhost:8090/${image.url}`} alt="" />
+            <CheckImage src={image.url} />
           </Thumbnail>
         ))}
       </Thumbnails>
@@ -32,25 +30,13 @@ const Wrapper = styled.div`
   gap: 1.5rem;
 `;
 
-const ImgWrapper = styled.div`
-  position: relative;
-  object-fit: cover;
-  object-position: center;
-  overflow: hidden;
-`;
-
-const MainImg = styled(ImgWrapper)`
-  width: 30rem;
-  height: 30rem;
-`;
-
 const Thumbnails = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 5rem;
   gap: 0.5rem;
 `;
 
-const Thumbnail = styled(ImgWrapper)<{ $active: boolean }>`
-  height: 5.5rem;
+const Thumbnail = styled.div<{ $active: boolean }>`
   border: 0.125rem solid ${({ $active }) => ($active ? $primaryColor : 'transparent')};
 `;

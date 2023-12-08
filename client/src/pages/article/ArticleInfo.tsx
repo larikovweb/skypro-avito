@@ -1,5 +1,4 @@
 import { FC, useCallback } from 'react';
-import { GeneralImg } from '../../styled/components';
 import styled from '@emotion/styled';
 import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled/variables';
 import { Button } from '../../components/form/Button';
@@ -10,6 +9,7 @@ import { userAPI } from '../../redux/services/userService';
 import { articleAPI } from '../../redux/services/articleService';
 import { useNavigate } from 'react-router-dom';
 import { MAIN_ROUTE } from '../../utils/consts';
+import { CheckImage } from '../../components/img/CheckImage';
 
 type Props = {
   id: number;
@@ -61,9 +61,7 @@ export const ArticleInfo: FC<Props> = (props) => {
         )}
       </Buttons>
       <Seller>
-        <Avatar>
-          <GeneralImg src={`http://localhost:8090/${user.avatar}`} alt="" />
-        </Avatar>
+        <CheckImage type="avatar" size="2.5rem" src={user.avatar} />
         <Name>
           <b>{user.name}</b>
           <span>{user.sells_from}</span>
@@ -157,20 +155,11 @@ const Seller = styled.div`
   align-items: flex-start;
 `;
 
-const Avatar = styled.div`
-  width: 2.5rem;
-  height: 2.5rem;
-  fill: #f0f0f0;
-  border-radius: 100%;
-  overflow: hidden;
-  position: relative;
-  margin-right: 0.75rem;
-`;
-
 const Name = styled.div`
   display: flex;
   flex-direction: column;
   font-family: 'NotoSans', sans-serif;
+  margin-left: 0.5rem;
   b {
     font-size: 1.25rem;
     font-style: normal;

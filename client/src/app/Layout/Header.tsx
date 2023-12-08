@@ -46,7 +46,7 @@ const Wrapper = styled.header`
 const MyContainer = styled(Container)`
   display: flex;
   justify-content: flex-end;
-  > *:not(:last-child) {
-    margin-right: 0.5rem;
+  button {
+    margin-left: 0.5rem;
   }
 `;

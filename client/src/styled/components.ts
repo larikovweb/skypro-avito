@@ -78,3 +78,18 @@ export const GeneralScroll = styled.div`
     display: none;
   }
 `;
+
+export const GeneralPlug = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  svg {
+    width: 70%;
+    height: 70%;
+    fill: #000;
+    stroke: #000;
+    opacity: 0.3;
+  }
+`;
