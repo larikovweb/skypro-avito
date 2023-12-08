@@ -50,5 +50,17 @@ export const articleAPI = createApi({
       }),
       invalidatesTags: () => [{ type: 'Article', id: 'LIST' }],
     }),
+    getMyArticles: build.query<IArticle[], { sorting?: string; page?: number }>({
+      query: (fields) => {
+        const queryString = createQueryString(fields);
+
+        return {
+          url: `/ads/me?${queryString}`,
+          method: 'GET',
+          headers: { 'content-type': 'application/json' },
+        };
+      },
+      providesTags: () => [{ type: 'Article', id: 'LIST' }],
+    }),
   }),
 });

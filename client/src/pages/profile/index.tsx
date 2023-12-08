@@ -7,8 +7,11 @@ import { ArticleCardList } from '../../components/article/ArticleCardList';
 import { articleAPI } from '../../redux/services/articleService';
 
 const Profile: FC = () => {
-  const { data: articles, isLoading, isError } = articleAPI.useGetArticlesQuery({});
-
+  const {
+    data: articles,
+    isLoading,
+    isError,
+  } = articleAPI.useGetMyArticlesQuery({ sorting: 'new' });
   return (
     <>
       <HelmetHead title="Настройки профиля" descr="Настройки профиля" />
