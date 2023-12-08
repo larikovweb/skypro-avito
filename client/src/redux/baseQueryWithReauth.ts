@@ -21,13 +21,15 @@ const baseQuery = fetchBaseQuery({
 
 export const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-
   if (result.error && 'status' in result.error && result.error.status === 401) {
     const refreshResult = await baseQuery(
       {
         url: '/auth/login/',
         method: 'PUT',
-        body: { refresh_token: (api.getState() as RootState).auth.refreshToken },
+        body: {
+          refresh_token: (api.getState() as RootState).auth.refreshToken,
+          access_token: (api.getState() as RootState).auth.accessToken,
+        },
       },
       api,
       extraOptions,
