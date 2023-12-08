@@ -9,9 +9,9 @@ import { articleAPI } from '../../redux/services/articleService';
 import { isUndefined } from '@bunt/is';
 
 const Article: FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { data: article, isLoading, isError } = articleAPI.useGetArticleQuery(id);
-
+  console.log(article, 'article');
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -26,7 +26,13 @@ const Article: FC = () => {
     <Container>
       <Wrapper>
         <ArticleGallery images={images} />
-        <ArticleInfo title={title} created_on={created_on} user={user} price={price} />
+        <ArticleInfo
+          id={Number(id)}
+          title={title}
+          created_on={created_on}
+          user={user}
+          price={price}
+        />
       </Wrapper>
       {!isUndefined(description) && <ArticleDescr description={description} />}
     </Container>

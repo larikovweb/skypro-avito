@@ -10,7 +10,6 @@ type Props = {
 
 export const ArticleGallery: FC<Props> = (props) => {
   const { images } = props;
-  console.log(images);
 
   return (
     <Wrapper>

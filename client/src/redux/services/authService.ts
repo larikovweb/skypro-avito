@@ -1,12 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser } from '../../interface';
+import { RootState } from '../store';
+import { SERVER_URL } from '../../utils/consts';
 
 export const authAPI = createApi({
   reducerPath: 'authAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://127.0.0.1:8090',
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem('access_token');
+    baseUrl: SERVER_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.accessToken;
+
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -17,11 +20,12 @@ export const authAPI = createApi({
     register: build.mutation<
       IUser,
       {
-        email: string;
         password: string;
-        repeatPassword?: string;
+        email: string;
+        role?: string;
         name?: string;
         surname?: string;
+        phone?: string;
         city?: string;
       }
     >({
@@ -29,7 +33,6 @@ export const authAPI = createApi({
         url: '/auth/register/',
         method: 'POST',
         body: credentials,
-        headers: { 'content-type': 'application/json' },
       }),
     }),
     login: build.mutation<
@@ -44,7 +47,6 @@ export const authAPI = createApi({
         url: '/auth/login/',
         method: 'POST',
         body: credentials,
-        headers: { 'content-type': 'application/json' },
       }),
     }),
     updateToken: build.mutation<
@@ -62,7 +64,6 @@ export const authAPI = createApi({
         url: '/auth/login/',
         method: 'PUT',
         body: credentials,
-        headers: { 'content-type': 'application/json' },
       }),
     }),
   }),

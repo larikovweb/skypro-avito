@@ -1,14 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
-import { TFields } from '../../interface';
+import { IArticle, TFields } from '../../interface';
+import { createQueryString } from '../../helpers/api';
+import { SERVER_URL } from '../../utils/consts';
 
 export const articleAPI = createApi({
   reducerPath: 'articleAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://127.0.0.1:8090',
+    baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.accessToken;
-      console.log(token);
 
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
@@ -16,13 +17,19 @@ export const articleAPI = createApi({
       return headers;
     },
   }),
+  tagTypes: ['Article'],
   endpoints: (build) => ({
-    getArticles: build.query({
-      query: () => ({
-        url: '/ads/',
-        method: 'GET',
-        headers: { 'content-type': 'application/json' },
-      }),
+    getArticles: build.query<IArticle[], { user_id?: string; sorting?: string; page?: number }>({
+      query: (fields) => {
+        const queryString = createQueryString(fields);
+
+        return {
+          url: `/ads/?${queryString}`,
+          method: 'GET',
+          headers: { 'content-type': 'application/json' },
+        };
+      },
+      providesTags: () => [{ type: 'Article', id: 'LIST' }],
     }),
     getArticle: build.query({
       query: (id) => ({
@@ -37,8 +44,7 @@ export const articleAPI = createApi({
 
         files.forEach((file) => formData.append('files', file));
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const queryString = new URLSearchParams(fields as any).toString();
+        const queryString = createQueryString(fields);
 
         return {
           url: `/ads/?${queryString}`,
@@ -46,6 +52,14 @@ export const articleAPI = createApi({
           body: formData,
         };
       },
+      invalidatesTags: () => [{ type: 'Article', id: 'LIST' }],
+    }),
+    deleteArticle: build.mutation<void, number>({
+      query: (id) => ({
+        url: `/ads/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: () => [{ type: 'Article', id: 'LIST' }],
     }),
   }),
 });

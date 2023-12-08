@@ -10,3 +10,5 @@ export const NOT_FOUND_ROUTE = '*';
 export const SCREEN_LG = 1920;
 export const SCREEN_MD = 992;
 export const SCREEN_SM = 480;
+
+export const SERVER_URL = 'http://127.0.0.1:8090';

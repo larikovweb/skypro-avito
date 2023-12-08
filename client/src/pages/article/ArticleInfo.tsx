@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { GeneralImg } from '../../styled/components';
 import styled from '@emotion/styled';
 import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled/variables';
@@ -6,16 +6,34 @@ import { Button } from '../../components/form/Button';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalFeedback } from '../../components/modal/ModalFeedback';
 import { IUser } from '../../interface';
+import { userAPI } from '../../redux/services/userService';
+import { articleAPI } from '../../redux/services/articleService';
+import { useNavigate } from 'react-router-dom';
+import { MAIN_ROUTE } from '../../utils/consts';
 
 type Props = {
+  id: number;
   title: string;
   price: number;
   created_on: string;
   user: IUser;
+  myArticle?: boolean;
 };
 
 export const ArticleInfo: FC<Props> = (props) => {
-  const { title, price, created_on, user } = props;
+  const { title, price, created_on, user, id } = props;
+  const navigate = useNavigate();
+
+  const { data: userActive } = userAPI.useGetActiveUserQuery({});
+  const [deleteArticle, { status }] = articleAPI.useDeleteArticleMutation();
+
+  const myArtile = userActive?.id === user.id;
+
+  const removeArticle = useCallback(async () => {
+    await deleteArticle(id);
+    navigate(MAIN_ROUTE);
+  }, [id, deleteArticle, navigate]);
+
   return (
     <Wrapper>
       <Title>{title}</Title>
@@ -27,10 +45,21 @@ export const ArticleInfo: FC<Props> = (props) => {
         <Feedback>23 отзыва</Feedback>
       </ModalControl>
       <Price>{price} ₽</Price>
-      <MyButton>
-        <b>Показать телефон</b>
-        <span>{user.phone}</span>
-      </MyButton>
+      <Buttons>
+        {myArtile ? (
+          <>
+            <Button>Редактировать</Button>
+            <Button pending={status === 'pending'} onClick={removeArticle}>
+              Снять с публикации
+            </Button>
+          </>
+        ) : (
+          <MyButton>
+            <b>Показать телефон</b>
+            <span>{user.phone}</span>
+          </MyButton>
+        )}
+      </Buttons>
       <Seller>
         <Avatar>
           <GeneralImg src={`http://localhost:8090/${user.avatar}`} alt="" />
@@ -94,7 +123,6 @@ const Price = styled.div`
 `;
 
 const MyButton = styled(Button)`
-  margin-bottom: 2rem;
   span {
     display: flex;
     align-items: center;
@@ -111,6 +139,16 @@ const MyButton = styled(Button)`
     font-style: normal;
     font-weight: 400;
     line-height: 140%;
+  }
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  margin-bottom: 2rem;
+  button {
+    &:not(:last-of-type) {
+      margin-right: 0.75rem;
+    }
   }
 `;
 

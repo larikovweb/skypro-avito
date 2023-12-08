@@ -9,14 +9,6 @@ import { articleAPI } from '../../redux/services/articleService';
 const Profile: FC = () => {
   const { data: articles, isLoading, isError } = articleAPI.useGetArticlesQuery({});
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error</div>;
-  }
-
   return (
     <>
       <HelmetHead title="Настройки профиля" descr="Настройки профиля" />
@@ -24,7 +16,7 @@ const Profile: FC = () => {
         <GeneralTitle>Здравствуйте, Антон!</GeneralTitle>
         <ProfileSettings />
         <SubTitle>Мои товары</SubTitle>
-        <ArticleCardList articles={articles} />
+        <ArticleCardList articles={articles} isError={isError} isLoading={isLoading} />
       </Container>
     </>
   );

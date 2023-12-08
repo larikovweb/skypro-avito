@@ -5,18 +5,20 @@ import { ArticleCardList } from '../../components/article/ArticleCardList';
 import { articleAPI } from '../../redux/services/articleService';
 
 const Main: FC = () => {
-  const { data: articles, isLoading } = articleAPI.useGetArticlesQuery({});
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const {
+    data: articles,
+    isLoading,
+    isError,
+  } = articleAPI.useGetArticlesQuery({
+    sorting: 'new',
+  });
 
   return (
     <>
       <HelmetHead title="Заголовок Главной" descr="Описание Главной" />
       <Container>
         <GeneralTitle>Объявления</GeneralTitle>
-        <ArticleCardList articles={articles} />
+        <ArticleCardList articles={articles} isError={isError} isLoading={isLoading} />
       </Container>
     </>
   );
