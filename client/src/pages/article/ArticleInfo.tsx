@@ -5,30 +5,39 @@ import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled
 import { Button } from '../../components/form/Button';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalFeedback } from '../../components/modal/ModalFeedback';
+import { IUser } from '../../interface';
 
-export const ArticleInfo: FC = () => {
+type Props = {
+  title: string;
+  price: number;
+  created_on: string;
+  user: IUser;
+};
+
+export const ArticleInfo: FC<Props> = (props) => {
+  const { title, price, created_on, user } = props;
   return (
     <Wrapper>
-      <Title>Ракетка для большого тенниса Triumph Pro STС Б/У</Title>
+      <Title>{title}</Title>
       <InfoList>
-        <li>Сегодня в 10:45</li>
-        <li>Санкт-Петербург</li>
+        <li>{created_on}</li>
+        <li>{user.city}</li>
       </InfoList>
       <ModalControl id="feedback" modal={<ModalFeedback />}>
         <Feedback>23 отзыва</Feedback>
       </ModalControl>
-      <Price>2 200 ₽</Price>
+      <Price>{price} ₽</Price>
       <MyButton>
         <b>Показать телефон</b>
-        <span>8 905 ХХХ ХХ ХХ</span>
+        <span>{user.phone}</span>
       </MyButton>
       <Seller>
         <Avatar>
-          <GeneralImg src="https://picsum.photos/200/300" alt="" />
+          <GeneralImg src={`http://localhost:8090/${user.avatar}`} alt="" />
         </Avatar>
         <Name>
-          <b>Кирилл</b>
-          <span>Продает товары с августа 2021</span>
+          <b>{user.name}</b>
+          <span>{user.sells_from}</span>
         </Name>
       </Seller>
     </Wrapper>

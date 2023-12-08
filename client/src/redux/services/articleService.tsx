@@ -24,12 +24,20 @@ export const articleAPI = createApi({
         headers: { 'content-type': 'application/json' },
       }),
     }),
+    getArticle: build.query({
+      query: (id) => ({
+        url: `/ads/${id}`,
+        method: 'GET',
+        headers: { 'content-type': 'application/json' },
+      }),
+    }),
     createArticle: build.mutation<void, { files: File[]; fields: TFields }>({
       query: ({ files, fields }) => {
         const formData = new FormData();
 
         files.forEach((file) => formData.append('files', file));
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const queryString = new URLSearchParams(fields as any).toString();
 
         return {

@@ -2,17 +2,27 @@ import styled from '@emotion/styled';
 import { FC } from 'react';
 import { GeneralImg } from '../../styled/components';
 import { $primaryColor } from '../../styled/variables';
+import { IImage } from '../../interface';
 
-export const ArticleGallery: FC = () => {
+type Props = {
+  images: IImage[];
+};
+
+export const ArticleGallery: FC<Props> = (props) => {
+  const { images } = props;
+  console.log(images);
+
   return (
     <Wrapper>
       <MainImg>
-        <GeneralImg src="https://picsum.photos/200/300" alt="" />
+        <GeneralImg src={`http://localhost:8090/${images[0].url}`} alt="" />
       </MainImg>
       <Thumbnails>
-        <Thumbnail $active>
-          <GeneralImg src="https://picsum.photos/200/300" alt="" />
-        </Thumbnail>
+        {images.map((image, index) => (
+          <Thumbnail $active={index === 0} key={image.id}>
+            <GeneralImg src={`http://localhost:8090/${image.url}`} alt="" />
+          </Thumbnail>
+        ))}
       </Thumbnails>
     </Wrapper>
   );

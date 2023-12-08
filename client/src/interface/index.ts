@@ -10,7 +10,7 @@ export interface IUser {
   surname: string;
 }
 
-interface IImage {
+export interface IImage {
   id: number;
   ad_id: number;
   url: string;

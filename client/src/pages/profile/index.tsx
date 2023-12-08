@@ -7,7 +7,15 @@ import { ArticleCardList } from '../../components/article/ArticleCardList';
 import { articleAPI } from '../../redux/services/articleService';
 
 const Profile: FC = () => {
-  const { data: articles } = articleAPI.useGetArticlesQuery({});
+  const { data: articles, isLoading, isError } = articleAPI.useGetArticlesQuery({});
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error</div>;
+  }
 
   return (
     <>
