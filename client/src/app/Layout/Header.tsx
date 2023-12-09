@@ -18,7 +18,7 @@ export const Header: FC = () => {
       <MyContainer>
         {isAuth ? (
           <>
-            <ModalControl id="article" modal={<ModalArticle />}>
+            <ModalControl id="article" modal={() => <ModalArticle />}>
               <Button whiteBorder>Разместить объявление</Button>
             </ModalControl>
             <Link to={PROFILE_ROUTE}>
@@ -29,7 +29,7 @@ export const Header: FC = () => {
             </Button>
           </>
         ) : (
-          <ModalControl id="auth" modal={<ModalAuth />}>
+          <ModalControl id="auth" modal={() => <ModalAuth />}>
             <Button whiteBorder>Вход в личный кабинет</Button>
           </ModalControl>
         )}

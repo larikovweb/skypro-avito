@@ -1,25 +1,27 @@
 import { FC, ReactNode } from 'react';
-
 import { ModalOverlay } from './ModalOverlay';
 import { useModal } from '../../hooks/useModal';
 
 type Props = {
-  modal: ReactNode;
+  modal: (props: any) => ReactNode;
   children: ReactNode;
   id: string;
+  modalProps?: any;
 };
 
-export const ModalControl: FC<Props> = ({ modal, children, id }) => {
-  const { isOpen, open, close } = useModal(id);
+export const ModalControl: FC<Props> = ({ modal, children, id, modalProps }) => {
+  const { isOpen, open, close, props } = useModal(id);
 
   return (
     <>
-      <div style={{ cursor: 'pointer', width: 'fit-content' }} onClick={open}>
+      <div style={{ cursor: 'pointer', width: 'fit-content' }} onClick={() => open(modalProps)}>
         {children}
       </div>
-      <ModalOverlay setOpen={close} open={isOpen}>
-        {modal}
-      </ModalOverlay>
+      {isOpen && (
+        <ModalOverlay setOpen={close} open={isOpen}>
+          {modal(props)}
+        </ModalOverlay>
+      )}
     </>
   );
 };

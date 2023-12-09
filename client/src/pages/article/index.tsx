@@ -11,7 +11,6 @@ import { isUndefined } from '@bunt/is';
 const Article: FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: article, isLoading, isError } = articleAPI.useGetArticleQuery(id);
-  console.log(article, 'article');
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -27,6 +26,7 @@ const Article: FC = () => {
       <Wrapper>
         <ArticleGallery images={images} />
         <ArticleInfo
+          description={description}
           id={Number(id)}
           title={title}
           created_on={created_on}

@@ -2,21 +2,26 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ModalState {
   currentModal: string | null;
+  props: any;
 }
 
 const initialState: ModalState = {
   currentModal: null,
+  props: {},
 };
 
-export const modalSlice = createSlice({
+const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<string>) => {
-      state.currentModal = action.payload;
+    openModal: (state, action: PayloadAction<{ id: string; props?: any }>) => {
+      const { id, props } = action.payload;
+      state.currentModal = id;
+      state.props = props || {};
     },
     closeModal: (state) => {
       state.currentModal = null;
+      state.props = {};
     },
   },
 });

@@ -4,9 +4,10 @@ import { closeModal, openModal } from '../redux/slices/modalSlice';
 
 export const useModal = (id: string) => {
   const dispatch = useDispatch();
-  const currentModal = useSelector((state: RootState) => state.modal.currentModal);
-  const isOpen = currentModal === id;
+  const modalState = useSelector((state: RootState) => state.modal);
+  const isOpen = modalState.currentModal === id;
+  const props = modalState.props;
   const close = () => dispatch(closeModal());
-  const open = () => dispatch(openModal(id));
-  return { isOpen, close, open };
+  const open = (props?: any) => dispatch(openModal({ id, props }));
+  return { isOpen, close, open, props };
 };

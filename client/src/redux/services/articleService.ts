@@ -26,8 +26,9 @@ export const articleAPI = createApi({
         method: 'GET',
         headers: { 'content-type': 'application/json' },
       }),
+      providesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
     }),
-    createArticle: build.mutation<void, { files: File[]; fields: TFields }>({
+    createArticle: build.mutation<IArticle, { files: File[]; fields: TFields }>({
       query: ({ files, fields }) => {
         const formData = new FormData();
 
@@ -41,6 +42,14 @@ export const articleAPI = createApi({
           body: formData,
         };
       },
+      invalidatesTags: () => [{ type: 'Article', id: 'LIST' }],
+    }),
+    createNotImageArticle: build.mutation<IArticle, TFields>({
+      query: (fields) => ({
+        url: '/adstext/',
+        method: 'POST',
+        body: fields,
+      }),
       invalidatesTags: () => [{ type: 'Article', id: 'LIST' }],
     }),
     deleteArticle: build.mutation<void, number>({
@@ -57,10 +66,17 @@ export const articleAPI = createApi({
         return {
           url: `/ads/me?${queryString}`,
           method: 'GET',
-          headers: { 'content-type': 'application/json' },
         };
       },
-      providesTags: () => [{ type: 'Article', id: 'LIST' }],
+      providesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
+    }),
+    updateArticle: build.mutation<void, { id: number; fields: TFields }>({
+      query: ({ id, fields }) => ({
+        url: `/ads/${id}`,
+        method: 'PATCH',
+        body: fields,
+      }),
+      invalidatesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
     }),
   }),
 });

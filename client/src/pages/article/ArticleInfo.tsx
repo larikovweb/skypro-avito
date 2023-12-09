@@ -10,24 +10,31 @@ import { articleAPI } from '../../redux/services/articleService';
 import { useNavigate } from 'react-router-dom';
 import { MAIN_ROUTE } from '../../utils/consts';
 import { CheckImage } from '../../components/img/CheckImage';
+import { useModal } from '../../hooks/useModal';
 
 type Props = {
   id: number;
   title: string;
   price: number;
+  description: string;
   created_on: string;
   user: IUser;
   myArticle?: boolean;
 };
 
 export const ArticleInfo: FC<Props> = (props) => {
-  const { title, price, created_on, user, id } = props;
+  const { title, price, created_on, user, id, description } = props;
   const navigate = useNavigate();
+  const { open } = useModal('article');
 
   const { data: userActive } = userAPI.useGetActiveUserQuery({});
   const [deleteArticle, { status }] = articleAPI.useDeleteArticleMutation();
 
   const myArtile = userActive?.id === user.id;
+  const modalProps = {
+    editable: true,
+    formData: { title: title, price: price, description: description, id: id },
+  };
 
   const removeArticle = useCallback(async () => {
     await deleteArticle(id);
@@ -41,14 +48,14 @@ export const ArticleInfo: FC<Props> = (props) => {
         <li>{created_on}</li>
         <li>{user.city}</li>
       </InfoList>
-      <ModalControl id="feedback" modal={<ModalFeedback />}>
+      <ModalControl id="feedback" modal={() => <ModalFeedback />}>
         <Feedback>23 отзыва</Feedback>
       </ModalControl>
       <Price>{price} ₽</Price>
       <Buttons>
         {myArtile ? (
           <>
-            <Button>Редактировать</Button>
+            <Button onClick={() => open(modalProps)}>Редактировать</Button>
             <Button pending={status === 'pending'} onClick={removeArticle}>
               Снять с публикации
             </Button>

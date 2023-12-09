@@ -9,6 +9,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { UploadImage } from '../form/UploadImage';
 import { articleAPI } from '../../redux/services/articleService';
 import { isNull } from '@bunt/is';
+import { useNavigate } from 'react-router-dom';
+import { ARTICLE_ROUTE } from '../../utils/consts';
 
 type TForm = {
   title: string;
@@ -17,31 +19,50 @@ type TForm = {
   images: File[] | null;
 };
 
-export const ModalArticle: FC = () => {
-  const { close } = useModal('article');
-  const [createArticle] = articleAPI.useCreateArticleMutation();
+type TFormData = TForm & {
+  id: number;
+};
 
+type Props = {
+  editable?: boolean;
+  formData?: TFormData;
+};
+
+export const ModalArticle: FC<Props> = () => {
+  const { close, props: modalProps }: { props: Props; close: () => void } = useModal('article');
+  const [createArticle] = articleAPI.useCreateArticleMutation();
+  const [updateArticle] = articleAPI.useUpdateArticleMutation();
+  const [createNotImageArticle] = articleAPI.useCreateNotImageArticleMutation();
+  const { editable, formData } = modalProps;
+  const navigate = useNavigate();
+
+  const defaultValues = editable ? formData : { images: null };
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<TForm>({
-    defaultValues: {
-      images: null,
-    },
+    defaultValues: defaultValues,
   });
 
   const onSubmit = async (data: TForm) => {
     const { title, description, price, images } = data;
-    console.log(data);
-    if (isNull(images)) {
-      return;
-    }
-    const files = images.filter((image): image is File => image instanceof File);
+
     const fields = { title, description, price };
     try {
-      await createArticle({ files, fields }).unwrap();
+      if (editable && formData) {
+        await updateArticle({ id: formData.id, fields }).unwrap();
+      } else {
+        if (isNull(images) || isNull(images[0])) {
+          const result = await createNotImageArticle(fields).unwrap();
+          navigate(`${ARTICLE_ROUTE}/${result.id}`);
+        } else {
+          const files = images.filter((image): image is File => image instanceof File);
+          const result = await createArticle({ fields, files }).unwrap();
+          navigate(`${ARTICLE_ROUTE}/${result.id}`);
+        }
+      }
       close();
     } catch (error) {
       console.log(error);
@@ -50,7 +71,9 @@ export const ModalArticle: FC = () => {
 
   return (
     <Wrapper>
-      <ModalHead close={close}>Новое объявление</ModalHead>
+      <ModalHead close={close}>
+        {editable ? 'Редактирование объявления' : 'Новое объявление'}
+      </ModalHead>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <InputField error={errors.title?.message} label="Название">
           <Input
@@ -81,7 +104,6 @@ export const ModalArticle: FC = () => {
                 render={({ field: { onChange } }) => (
                   <UploadImage
                     getFile={(file) => {
-                      console.log(file);
                       onChange(file);
                     }}
                   />

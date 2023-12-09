@@ -33,8 +33,6 @@ export const ProfileSettings: FC<Props> = (props) => {
   });
 
   const onSubmit = async (data: IUser) => {
-    console.log(data);
-
     try {
       await updateUser(data).unwrap();
     } catch (error) {
