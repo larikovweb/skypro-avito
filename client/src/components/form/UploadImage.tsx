@@ -1,15 +1,18 @@
 import React, { forwardRef, useState } from 'react';
 import { IconAdd, IconDelete } from '../../icons';
 import styled from '@emotion/styled';
-import { $dangerColor } from '../../styled/variables';
+import { isFunction, isUndefined } from '@bunt/is';
+import { SERVER_URL } from '../../utils/consts';
 
 type Props = {
-  getFile: (file: File | null) => void;
+  getFile?: (file: File | null) => void;
+  deleteFile?: () => void;
+  src?: string;
 };
 
 export const UploadImage = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { getFile, ...rest } = props;
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const { getFile, src, deleteFile, ...rest } = props;
+  const [imageSrc, setImageSrc] = useState<string | null>(src ?? null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -19,15 +22,18 @@ export const UploadImage = forwardRef<HTMLInputElement, Props>((props, ref) => {
         setImageSrc(e.target?.result as string);
       };
       reader.readAsDataURL(file);
-      getFile(file);
+      isFunction(getFile) && getFile(file);
       return;
     }
   };
 
   const clearImage = () => {
     setImageSrc(null);
-    getFile(null);
+    isFunction(getFile) && getFile(null);
+    isFunction(deleteFile) && deleteFile();
   };
+
+  const localImage = imageSrc?.split('/')[0] === 'data:image';
 
   return (
     <Wrapper>
@@ -36,7 +42,14 @@ export const UploadImage = forwardRef<HTMLInputElement, Props>((props, ref) => {
           <IconDelete />
         </Delete>
       )}
-      {imageSrc && <img src={imageSrc} alt="Uploaded" />}
+      {imageSrc && (
+        <img
+          src={
+            isUndefined(deleteFile) ? imageSrc : localImage ? imageSrc : `${SERVER_URL}/${imageSrc}`
+          }
+          alt="Uploaded"
+        />
+      )}
       <input ref={ref} {...rest} type="file" accept="image/*" onChange={handleImageChange} />
       {!imageSrc && <IconAdd />}
     </Wrapper>
@@ -77,7 +90,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Delete = styled.div`
+export const Delete = styled.div`
   cursor: pointer;
   position: absolute;
   display: flex;
@@ -88,13 +101,13 @@ const Delete = styled.div`
   transform: translate(25%, -25%);
   width: 1.15rem;
   height: 1.15rem;
-  background-color: rgba(255, 0, 0, 0.1);
+  background-color: rgba(255, 0, 0, 1);
   z-index: 5;
   border-radius: 0.15rem;
   svg {
     width: 1rem;
     height: 1rem;
-    stroke: ${$dangerColor};
-    fill: ${$dangerColor};
+    stroke: #fff;
+    fill: #fff;
   }
 `;

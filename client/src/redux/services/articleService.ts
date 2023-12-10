@@ -20,7 +20,7 @@ export const articleAPI = createApi({
       },
       providesTags: () => [{ type: 'Article', id: 'LIST' }],
     }),
-    getArticle: build.query({
+    getArticle: build.query<IArticle, number>({
       query: (id) => ({
         url: `/ads/${id}`,
         method: 'GET',
@@ -76,6 +76,32 @@ export const articleAPI = createApi({
         method: 'PATCH',
         body: fields,
       }),
+      invalidatesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
+    }),
+
+    updateImage: build.mutation<void, { id: number; file: File }>({
+      query: ({ id, file }) => {
+        const formData = new FormData();
+
+        formData.append('file', file);
+
+        return {
+          url: `/ads/${id}/image/`,
+          method: 'POST',
+          body: formData,
+        };
+      },
+      invalidatesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
+    }),
+    deleteImage: build.mutation<void, { id: number; file_url: string }>({
+      query: ({ id, file_url }) => {
+        const queryString = createQueryString({ file_url });
+
+        return {
+          url: `/ads/${id}/image?${queryString}`,
+          method: 'DELETE',
+        };
+      },
       invalidatesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
     }),
   }),

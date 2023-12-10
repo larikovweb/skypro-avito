@@ -4,7 +4,7 @@ import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled
 import { Button } from '../../components/form/Button';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalFeedback } from '../../components/modal/ModalFeedback';
-import { IUser } from '../../interface';
+import { IImage, IUser } from '../../interface';
 import { userAPI } from '../../redux/services/userService';
 import { articleAPI } from '../../redux/services/articleService';
 import { useNavigate } from 'react-router-dom';
@@ -20,10 +20,11 @@ type Props = {
   created_on: string;
   user: IUser;
   myArticle?: boolean;
+  images: IImage[];
 };
 
 export const ArticleInfo: FC<Props> = (props) => {
-  const { title, price, created_on, user, id, description } = props;
+  const { title, price, created_on, user, id, description, images } = props;
   const navigate = useNavigate();
   const { open } = useModal('article');
 
@@ -33,7 +34,7 @@ export const ArticleInfo: FC<Props> = (props) => {
   const myArtile = userActive?.id === user.id;
   const modalProps = {
     editable: true,
-    formData: { title: title, price: price, description: description, id: id },
+    formData: { title, price, description, id, localImages: images },
   };
 
   const removeArticle = useCallback(async () => {

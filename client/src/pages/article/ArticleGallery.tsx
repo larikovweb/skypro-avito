@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { $primaryColor } from '../../styled/variables';
 import { IImage } from '../../interface';
 import { CheckImage } from '../../components/img/CheckImage';
@@ -10,13 +10,14 @@ type Props = {
 
 export const ArticleGallery: FC<Props> = (props) => {
   const { images } = props;
+  const [active, setActive] = useState(0);
 
   return (
     <Wrapper>
-      <CheckImage src={images[0] ? images[0].url : null} size="30rem" />
+      <CheckImage src={images[active] ? images[active].url : null} size="30rem" />
       <Thumbnails>
         {images.map((image, index) => (
-          <Thumbnail $active={index === 0} key={image.id}>
+          <Thumbnail $active={index === active} onClick={() => setActive(index)} key={image.id}>
             <CheckImage src={image.url} />
           </Thumbnail>
         ))}
@@ -38,5 +39,6 @@ const Thumbnails = styled.div`
 `;
 
 const Thumbnail = styled.div<{ $active: boolean }>`
+  cursor: pointer;
   border: 0.125rem solid ${({ $active }) => ($active ? $primaryColor : 'transparent')};
 `;

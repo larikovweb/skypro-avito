@@ -8,9 +8,10 @@ import styled from '@emotion/styled';
 import { Controller, useForm } from 'react-hook-form';
 import { UploadImage } from '../form/UploadImage';
 import { articleAPI } from '../../redux/services/articleService';
-import { isNull } from '@bunt/is';
+import { isNull, isUndefined } from '@bunt/is';
 import { useNavigate } from 'react-router-dom';
 import { ARTICLE_ROUTE } from '../../utils/consts';
+import { IImage } from '../../interface';
 
 type TForm = {
   title: string;
@@ -21,6 +22,7 @@ type TForm = {
 
 type TFormData = TForm & {
   id: number;
+  localImages: IImage[];
 };
 
 type Props = {
@@ -33,8 +35,11 @@ export const ModalArticle: FC<Props> = () => {
   const [createArticle] = articleAPI.useCreateArticleMutation();
   const [updateArticle] = articleAPI.useUpdateArticleMutation();
   const [createNotImageArticle] = articleAPI.useCreateNotImageArticleMutation();
+  const [updateImage] = articleAPI.useUpdateImageMutation();
+  const [deleteImage] = articleAPI.useDeleteImageMutation();
   const { editable, formData } = modalProps;
   const navigate = useNavigate();
+  const localImages: IImage[] = formData?.localImages || [];
 
   const defaultValues = editable ? formData : { images: null };
   const {
@@ -69,6 +74,24 @@ export const ModalArticle: FC<Props> = () => {
     }
   };
 
+  const uploadNewImage = async (file: File | null) => {
+    if (formData && file) {
+      try {
+        await updateImage({ id: formData.id, file }).unwrap();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const removeImage = async (id: number, file_url: string) => {
+    try {
+      await deleteImage({ id, file_url }).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Wrapper>
       <ModalHead close={close}>
@@ -96,7 +119,20 @@ export const ModalArticle: FC<Props> = () => {
             </Label>
           }>
           <Images>
-            {[...Array(5)].map((_, index) => (
+            {editable &&
+              localImages.map((image, index) => (
+                <UploadImage
+                  key={index}
+                  deleteFile={() => {
+                    !isUndefined(formData) && removeImage(formData.id, image.url);
+                  }}
+                  src={image.url}
+                  getFile={(file) => {
+                    uploadNewImage(file);
+                  }}
+                />
+              ))}
+            {[...Array(5 - (localImages.length || 0))].map((_, index) => (
               <Controller
                 key={index}
                 control={control}
@@ -104,7 +140,8 @@ export const ModalArticle: FC<Props> = () => {
                 render={({ field: { onChange } }) => (
                   <UploadImage
                     getFile={(file) => {
-                      onChange(file);
+                      !editable && onChange(file);
+                      editable && uploadNewImage(file);
                     }}
                   />
                 )}

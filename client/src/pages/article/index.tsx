@@ -10,12 +10,12 @@ import { isUndefined } from '@bunt/is';
 
 const Article: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: article, isLoading, isError } = articleAPI.useGetArticleQuery(id);
+  const { data: article, isLoading, isError } = articleAPI.useGetArticleQuery(Number(id));
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (isError) {
+  if (isError || isUndefined(article)) {
     return <div>Error</div>;
   }
 
@@ -32,6 +32,7 @@ const Article: FC = () => {
           created_on={created_on}
           user={user}
           price={price}
+          images={images}
         />
       </Wrapper>
       {!isUndefined(description) && <ArticleDescr description={description} />}
