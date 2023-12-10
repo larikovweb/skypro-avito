@@ -4,65 +4,104 @@ import { useModal } from '../../hooks/useModal';
 import { InputField } from '../form/InputField';
 import { Input } from '../form/Input';
 import { Button } from '../form/Button';
-import { GeneralImg, GeneralScroll } from '../../styled/components';
+import { GeneralScroll } from '../../styled/components';
 import styled from '@emotion/styled';
-import { $secondaryColor } from '../../styled/variables';
 import { useForm } from 'react-hook-form';
+import { articleAPI } from '../../redux/services/articleService';
+import { isUndefined } from '@bunt/is';
+import { formatDateMonthAge } from '../../helpers/date';
+import { IComment } from '../../interface';
+import { useAuth } from '../../hooks/useAuth';
 
 type TForm = {
   feedback: string;
 };
 
-export const ModalFeedback: FC = () => {
+type Props = {
+  id: number;
+  feedbacks: IComment[] | undefined;
+  isLoading: boolean;
+  isError: boolean;
+};
+
+export const ModalFeedback: FC<Props> = (props) => {
+  const { id, feedbacks, isLoading, isError } = props;
   const { close } = useModal('feedback');
-  const feedbacks = [...new Array(10)];
+  const [createComment, { status }] = articleAPI.useCreateCommentMutation();
+  const { isAuth } = useAuth();
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isDirty },
   } = useForm<TForm>();
 
-  const onSubmit = (data: TForm) => {
-    console.log(data);
+  const onSubmit = async (data: TForm) => {
+    try {
+      await createComment({ article_id: id, text: data.feedback }).unwrap();
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const loading = isLoading && <>Loading...</>;
+  const error = isError && <>Error</>;
+  const content = !isUndefined(feedbacks) && (
+    <List>
+      {feedbacks.map((feedback) => (
+        <Comment>
+          <b>Комментарий</b>
+          <span>{feedback.text}</span>
+          <i>{formatDateMonthAge(feedback.created_on)}</i>
+        </Comment>
+      ))}
+    </List>
+  );
 
   return (
     <Wrapper>
       <ModalHead close={close}>Отзывы о товаре</ModalHead>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <InputField error={errors.feedback?.message} label="Добавить отзыв">
-          <Input
-            {...register('feedback', { required: 'Поле не может быть пустым' })}
-            as={'textarea'}
-          />
-        </InputField>
-        <Button disabled={!isDirty}>Опубликовать</Button>
-      </Form>
-      <List>
-        {feedbacks.map((_, index) => (
-          <Item key={index}>
-            <Avatar>
-              <GeneralImg src="https://picsum.photos/200/300" alt="" />
-            </Avatar>
-            <Text>
-              <Name>
-                <b>Вася Пупкин</b>
-                <span>14 августа</span>
-              </Name>
-              <Comment>
-                <b>Комментарий</b>
-                <span>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua.
-                </span>
-              </Comment>
-            </Text>
-          </Item>
-        ))}
-      </List>
+      {isAuth && (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <InputField error={errors.feedback?.message} label="Добавить отзыв">
+            <Input
+              {...register('feedback', { required: 'Поле не может быть пустым' })}
+              as={'textarea'}
+            />
+          </InputField>
+          <Button pending={status === 'pending'} disabled={!isDirty}>
+            Опубликовать
+          </Button>
+        </Form>
+      )}
+
+      {loading}
+      {error}
+      {content}
     </Wrapper>
   );
 };
+
+// const CommentItem: FC<{ feedback: IComment }> = (props) => {
+//   const { feedback } = props;
+
+//   return (
+//     <Item>
+//       <CheckImage size="2.5rem" type="avatar" src={''} />
+//       <Text>
+//         <Name>
+//           <span>{formatDateMonthAge(feedback.created_on)}</span>
+//         </Name>
+//         <Comment>
+//           <b>Комментарий</b>
+//           <span>{feedback.text}</span>
+//         </Comment>
+//       </Text>
+//     </Item>
+//   );
+// };
 
 const Wrapper = styled.div`
   width: 50rem;
@@ -81,42 +120,34 @@ const List = styled(GeneralScroll)`
   max-height: 30rem;
 `;
 
-const Item = styled.li`
-  display: flex;
-`;
+// const Item = styled.li`
+//   display: flex;
+// `;
 
-const Avatar = styled.div`
-  width: 2.5rem;
-  height: 2.5rem;
-  position: relative;
-  margin-right: 0.75rem;
-  overflow: hidden;
-  border-radius: 100%;
-`;
+// const Text = styled.div`
+//   display: grid;
+//   gap: 0.75rem;
+//   margin-left: 0.75rem;
+// `;
 
-const Text = styled.div`
-  display: grid;
-  gap: 0.75rem;
-`;
-
-const Name = styled.div`
-  font-family: 'NotoSans', sans-serif;
-  margin-bottom: 0.75rem;
-  b {
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 200%;
-    margin-right: 0.5rem;
-  }
-  span {
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 200%;
-    color: ${$secondaryColor};
-  }
-`;
+// const Name = styled.div`
+//   font-family: 'NotoSans', sans-serif;
+//   margin-bottom: 0.75rem;
+//   b {
+//     font-size: 1rem;
+//     font-style: normal;
+//     font-weight: 600;
+//     line-height: 200%;
+//     margin-right: 0.5rem;
+//   }
+//   span {
+//     font-size: 1rem;
+//     font-style: normal;
+//     font-weight: 400;
+//     line-height: 200%;
+//     color: ${$secondaryColor};
+//   }
+// `;
 
 const Comment = styled.div`
   display: flex;

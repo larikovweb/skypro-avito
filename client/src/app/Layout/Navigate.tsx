@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { IconLogo } from '../../icons';
 import { Link, useLocation } from 'react-router-dom';
 import { MAIN_ROUTE } from '../../utils/consts';
@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import { Container } from '../../styled/components';
 import { useDispatch } from 'react-redux';
 import { setSearchQuery } from '../../redux/slices/articleSlice';
+import { $phoneWidth, $primaryColor } from '../../styled/variables';
 
 export const Navigate: FC = () => {
   const [inputValue, setInputValue] = useState('');
@@ -20,6 +21,17 @@ export const Navigate: FC = () => {
 
     dispatch(setSearchQuery(inputValue));
   };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      console.log(inputValue);
+      dispatch(setSearchQuery(inputValue));
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [inputValue, dispatch]);
 
   return (
     <Wrapper>
@@ -51,6 +63,20 @@ const Logo = styled(Link)`
     width: 3.375rem;
     height: 2.33556rem;
   }
+  @media screen and (max-width: ${$phoneWidth}) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    background-color: #fff;
+    border-radius: 100%;
+    margin-right: 0.5rem;
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
 `;
 
 const Wrapper = styled(Container)`
@@ -59,5 +85,20 @@ const Wrapper = styled(Container)`
   padding: 2.6875rem 1.25rem;
   input {
     margin-right: 0.5rem;
+  }
+  @media screen and (max-width: ${$phoneWidth}) {
+    padding: 0.7rem 1rem;
+    background-color: ${$primaryColor};
+    position: fixed;
+    z-index: 11;
+    top: 0;
+    left: 0;
+    width: 100%;
+    button {
+      display: none;
+    }
+    input {
+      margin-right: 0;
+    }
   }
 `;

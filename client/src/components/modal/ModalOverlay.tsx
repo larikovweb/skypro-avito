@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { FadeTransition } from '../animations/Transitions';
 import { GeneralSubtitle } from '../../styled/components';
 import { IconClose } from '../../icons';
-import { $primaryColor } from '../../styled/variables';
+import { $phoneWidth, $primaryColor } from '../../styled/variables';
 
 type Props = {
   open?: boolean;
@@ -67,6 +67,13 @@ const Content = styled.div`
     display: none;
     width: 0;
     opacity: 0;
+  }
+  @media screen and (max-width: ${$phoneWidth}) {
+    > * {
+      height: 100vh !important;
+      width: 100vw !important;
+      padding: 5rem 1rem 3.5rem !important;
+    }
   }
 `;
 

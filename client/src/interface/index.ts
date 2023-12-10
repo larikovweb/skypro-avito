@@ -28,3 +28,11 @@ export interface IArticle {
 }
 
 export type TFields = Record<string, string | number>;
+
+export interface IComment {
+  id: number;
+  ad_id: number;
+  author_id: number;
+  text: string;
+  created_on: string;
+}

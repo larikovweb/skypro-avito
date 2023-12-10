@@ -7,6 +7,7 @@ import { ArticleDescr } from './ArticleDescr';
 import { useParams } from 'react-router-dom';
 import { articleAPI } from '../../redux/services/articleService';
 import { isUndefined } from '@bunt/is';
+import { $phoneWidth } from '../../styled/variables';
 
 const Article: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +47,12 @@ const Wrapper = styled.div`
   gap: 3.7rem;
   padding-top: 2.25rem;
   margin-bottom: 3.75rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+    margin-top: -1.12rem;
+    gap: 1.25rem;
+  }
 `;
 
 export default Article;

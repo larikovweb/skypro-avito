@@ -1,12 +1,16 @@
 //global styled
 
 import styled from '@emotion/styled';
+import { $phoneWidth } from './variables';
 
 export const Container = styled.div`
   width: 100%;
   max-width: 72.375rem;
   margin: 0 auto;
   padding: 0 1.25rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    padding: 0 1rem;
+  }
 `;
 
 export const GeneralTitle = styled.h1`
@@ -14,6 +18,11 @@ export const GeneralTitle = styled.h1`
   font-style: normal;
   font-weight: 500;
   line-height: 220%;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 1.5rem;
+    line-height: 120%;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 export const GeneralSubtitle = styled.h2`
@@ -21,6 +30,11 @@ export const GeneralSubtitle = styled.h2`
   font-style: normal;
   font-weight: 500;
   line-height: 220%;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 1.5rem;
+    line-height: 120%;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 export const GeneralImg = styled.img`

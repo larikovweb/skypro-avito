@@ -8,6 +8,7 @@ import { Button } from '../../components/form/Button';
 import { useForm } from 'react-hook-form';
 import { IUser } from '../../interface';
 import { userAPI } from '../../redux/services/userService';
+import { $phoneWidth } from '../../styled/variables';
 
 type Props = {
   user: IUser;
@@ -111,6 +112,10 @@ const Title = styled(GeneralSubtitle)`
 const Form = styled.form`
   display: flex;
   margin-bottom: 4.25rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Inputs = styled.div`
@@ -119,10 +124,16 @@ const Inputs = styled.div`
   margin-left: 3rem;
   max-width: 38.375rem;
   width: 100%;
+  @media screen and (max-width: ${$phoneWidth}) {
+    margin-left: 0;
+  }
 `;
 
 const Row = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    grid-template-columns: 1fr;
+  }
 `;

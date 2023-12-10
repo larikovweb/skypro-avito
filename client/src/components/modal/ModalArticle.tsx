@@ -12,6 +12,7 @@ import { isNull, isUndefined } from '@bunt/is';
 import { useNavigate } from 'react-router-dom';
 import { ARTICLE_ROUTE } from '../../utils/consts';
 import { IImage } from '../../interface';
+import { $phoneWidth } from '../../styled/variables';
 
 type TForm = {
   title: string;
@@ -173,6 +174,12 @@ const Form = styled.form`
   display: grid;
   gap: 1.25rem;
   margin-top: 0.65rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    button {
+      width: 100%;
+      margin: 0;
+    }
+  }
 `;
 
 const Label = styled.div`
@@ -182,6 +189,10 @@ const Label = styled.div`
     margin-left: 0.5rem;
     color: rgba(0, 0, 0, 0.3);
   }
+  @media screen and (max-width: ${$phoneWidth}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const InputPrice = styled.div`
@@ -189,6 +200,9 @@ const InputPrice = styled.div`
   width: 12.5rem;
   input {
     padding-right: 2.5rem;
+  }
+  @media screen and (max-width: ${$phoneWidth}) {
+    width: 100%;
   }
 `;
 
@@ -208,4 +222,19 @@ const Images = styled.div`
   gap: 0.625rem;
   justify-content: space-between;
   grid-template-columns: repeat(5, 1fr);
+  @media screen and (max-width: ${$phoneWidth}) {
+    display: flex;
+    overflow-x: auto;
+    width: 100vw;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    > * {
+      min-width: 5rem;
+      max-width: 5rem;
+      height: 5rem;
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;

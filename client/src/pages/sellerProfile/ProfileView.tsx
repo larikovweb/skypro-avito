@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from '@emotion/styled';
 import { IUser } from '../../interface';
 import { CheckImage } from '../../components/img/CheckImage';
-import { $secondaryColor } from '../../styled/variables';
+import { $phoneWidth, $secondaryColor } from '../../styled/variables';
 import { PhoneButton } from '../../components/form/PhoneButton';
 import { formatDateMonthAge } from '../../helpers/date';
 
@@ -35,6 +35,13 @@ const Wrapper = styled.div`
   display: flex;
   align-items: flex-start;
   margin-bottom: 2.75rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    flex-direction: column;
+    align-items: center;
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 const Info = styled.div`
@@ -42,6 +49,10 @@ const Info = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 3rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    margin-left: 0;
+    width: 100%;
+  }
 `;
 
 const Name = styled.div`

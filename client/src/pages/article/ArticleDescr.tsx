@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { GeneralSubtitle } from '../../styled/components';
 import styled from '@emotion/styled';
+import { $phoneWidth } from '../../styled/variables';
 
 type Props = {
   description: string;
@@ -24,4 +25,7 @@ const Descr = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 0.875rem;
+  }
 `;

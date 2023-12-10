@@ -4,6 +4,7 @@ import { Header } from './Header';
 import { Outlet } from 'react-router-dom';
 import { HelmetHead } from '../../components/seo/HelmetHead';
 import { Navigate } from './Navigate';
+import { $phoneWidth } from '../../styled/variables';
 
 export const Layout: FC = () => {
   return (
@@ -21,4 +22,8 @@ export const Layout: FC = () => {
 const Main = styled.main`
   display: block;
   padding-bottom: 2rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    padding-bottom: 5rem;
+    padding-top: 5rem;
+  }
 `;

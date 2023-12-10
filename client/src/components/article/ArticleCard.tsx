@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
 import { FC } from 'react';
-import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled/variables';
+import {
+  $phoneWidth,
+  $primaryColor,
+  $primaryHoverColor,
+  $secondaryColor,
+} from '../../styled/variables';
 import { Link } from 'react-router-dom';
 import { ARTICLE_ROUTE } from '../../utils/consts';
 import { IArticle } from '../../interface';
@@ -17,20 +22,23 @@ export const ArticleCard: FC<Props> = (props) => {
 
   return (
     <Wrapper to={`${ARTICLE_ROUTE}/${id}`}>
-      <CheckImage src={images[0] ? images[0].url : null} size="16.875rem" />
-      <Title>{title}</Title>
-      <Price>{price.toLocaleString('ru-RU')} ₽</Price>
-      <InfoList>
-        <li>{user.city}</li>
-        <li>{formatDateMonth(created_on)}</li>
-      </InfoList>
+      <CheckImage src={images[0] ? images[0].url : null} />
+      <Content>
+        <Title>{title}</Title>
+        <Price>{price.toLocaleString('ru-RU')} ₽</Price>
+        <InfoList>
+          <li>{user.city}</li>
+          <li>{formatDateMonth(created_on)}</li>
+        </InfoList>
+      </Content>
     </Wrapper>
   );
 };
 
 const Wrapper = styled(Link)`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 16.344rem auto;
+  gap: 0.5rem;
   width: 100%;
   img {
     transition: transform 0.3s;
@@ -44,9 +52,22 @@ const Wrapper = styled(Link)`
       transform: scale(1.025);
     }
   }
+  @media screen and (max-width: ${$phoneWidth}) {
+    grid-template-rows: 8.25rem auto;
+    gap: 0;
+    border-radius: 0.45rem;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 0.25rem 0.85rem 0 rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const Content = styled.div`
+  padding: 0.5rem;
 `;
 
 const Title = styled.strong`
+  display: block;
   font-size: 1.375rem;
   font-style: normal;
   font-weight: 500;
@@ -54,6 +75,9 @@ const Title = styled.strong`
   color: ${$primaryColor};
   margin-bottom: 0.5rem;
   transition: color 0.3s;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 0.875rem;
+  }
 `;
 
 const Price = styled.div`
@@ -62,6 +86,9 @@ const Price = styled.div`
   font-weight: 500;
   line-height: 150%;
   margin-bottom: 0.5rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 1rem;
+  }
 `;
 
 const InfoList = styled.ul`
@@ -70,4 +97,7 @@ const InfoList = styled.ul`
   font-style: normal;
   font-weight: 400;
   line-height: 130%;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 0.75rem;
+  }
 `;

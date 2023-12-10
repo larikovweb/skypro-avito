@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ElementType, InputHTMLAttributes, forwardRef } from 'react';
+import { $phoneWidth } from '../../styled/variables';
 
 type Props = {
   as?: ElementType;
@@ -37,6 +38,7 @@ const InputField = styled.input<{ $bottomType?: boolean }>`
       padding: 0.5rem 0;
       border: none;
       border-bottom: 0.0625rem solid #d9d9d9;
+      border-radius: 0 !important;
     `}
   &::placeholder {
     color: rgba(0, 0, 0, 0.3);
@@ -48,5 +50,11 @@ const InputField = styled.input<{ $bottomType?: boolean }>`
     &::placeholder {
       opacity: 0;
     }
+  }
+  @media screen and (max-width: ${$phoneWidth}) {
+    padding: 0.56rem 1rem;
+    font-size: 0.875rem;
+    background-color: #fff;
+    border-radius: 1.875rem;
   }
 `;

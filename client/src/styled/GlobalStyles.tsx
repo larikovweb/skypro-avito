@@ -10,9 +10,8 @@ import {
   $mainFontColor,
   $mainFontSize,
   $phoneWidth,
-  $tableWidth,
 } from './variables';
-import { SCREEN_LG, SCREEN_MD, SCREEN_SM } from '../utils/consts';
+import { SCREEN_LG, SCREEN_SM } from '../utils/consts';
 
 export const GlobalStyles: FC = () => (
   <Global
@@ -26,15 +25,12 @@ export const GlobalStyles: FC = () => (
         font-family: ${$mainFont};
         font-size: ${$mainFontSize};
         scroll-behavior: smooth;
+        font-size: 16px;
         @media screen and (max-width: ${$desktopWidth}) {
-          font-size: 16px;
-          /* font-size: ${calcFluidFontSize(11.0223, 21.3333, SCREEN_MD, SCREEN_LG)}; */
-        }
-        @media screen and (max-width: ${$tableWidth}) {
-          font-size: ${calcFluidFontSize(9.9999, 20.6666, SCREEN_SM, SCREEN_MD)};
+          font-size: ${calcFluidFontSize(5.333, 16, SCREEN_SM, SCREEN_LG)};
         }
         @media screen and (max-width: ${$phoneWidth}) {
-          font-size: ${calcFluidFontSize(11.9465, 20.48, 280, SCREEN_SM)};
+          font-size: ${calcFluidFontSize(14, 24, 280, SCREEN_SM)};
         }
       }
 

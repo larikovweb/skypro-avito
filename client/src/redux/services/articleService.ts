@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { IArticle, TFields } from '../../interface';
+import { IArticle, IComment, TFields } from '../../interface';
 import { createQueryString } from '../../helpers/api';
 import { baseQueryWithReauth } from '../baseQueryWithReauth';
 
@@ -103,6 +103,21 @@ export const articleAPI = createApi({
         };
       },
       invalidatesTags: () => [{ type: 'Article', id: 'ARTICLE' }],
+    }),
+    createComment: build.mutation<IComment, { article_id: number; text: string }>({
+      query: ({ article_id, text }) => ({
+        url: `/ads/${article_id}/comments/`,
+        method: 'POST',
+        body: { text },
+      }),
+      invalidatesTags: () => [{ type: 'Article', id: 'COMMENT' }],
+    }),
+    getComments: build.query<IComment[], number>({
+      query: (id) => ({
+        url: `/ads/${id}/comments/`,
+        method: 'GET',
+      }),
+      providesTags: () => [{ type: 'Article', id: 'COMMENT' }],
     }),
   }),
 });

@@ -1,6 +1,11 @@
 import { FC, useCallback } from 'react';
 import styled from '@emotion/styled';
-import { $primaryColor, $primaryHoverColor, $secondaryColor } from '../../styled/variables';
+import {
+  $phoneWidth,
+  $primaryColor,
+  $primaryHoverColor,
+  $secondaryColor,
+} from '../../styled/variables';
 import { Button } from '../../components/form/Button';
 import { ModalControl } from '../../components/modal/ModalControl';
 import { ModalFeedback } from '../../components/modal/ModalFeedback';
@@ -29,6 +34,7 @@ export const ArticleInfo: FC<Props> = (props) => {
   const navigate = useNavigate();
   const { open } = useModal('article');
 
+  const { data: feedbacks, isLoading, isError } = articleAPI.useGetCommentsQuery(id);
   const { data: userActive } = userAPI.useGetActiveUserQuery({});
   const [deleteArticle, { status }] = articleAPI.useDeleteArticleMutation();
 
@@ -50,8 +56,12 @@ export const ArticleInfo: FC<Props> = (props) => {
         <li>Опубликовано: {formatDateMonth(created_on)}</li>
         <li>{user.city}</li>
       </InfoList>
-      <ModalControl id="feedback" modal={() => <ModalFeedback />}>
-        <Feedback>23 отзыва</Feedback>
+      <ModalControl
+        id="feedback"
+        modal={() => (
+          <ModalFeedback id={id} feedbacks={feedbacks} isLoading={isLoading} isError={isError} />
+        )}>
+        <Feedback>{feedbacks?.length || 0} отзывов</Feedback>
       </ModalControl>
       <Price>{price.toLocaleString('ru-RU')} ₽</Price>
       <Buttons>
@@ -88,6 +98,9 @@ const Title = styled.h1`
   font-style: normal;
   font-weight: 700;
   line-height: 140%;
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 1.125rem;
+  }
 `;
 
 const InfoList = styled.ul`
@@ -99,6 +112,9 @@ const InfoList = styled.ul`
   margin-top: 0.5rem;
   > * {
     margin-bottom: 0.25rem;
+  }
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 0.875rem;
   }
 `;
 
@@ -115,6 +131,9 @@ const Feedback = styled.div`
   &:hover {
     color: ${$primaryHoverColor};
   }
+  @media screen and (max-width: ${$phoneWidth}) {
+    font-size: 0.875rem;
+  }
 `;
 
 const Price = styled.div`
@@ -124,6 +143,10 @@ const Price = styled.div`
   font-weight: 700;
   line-height: 140%;
   margin: 2rem 0 1.25rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    margin: 1.25rem 0;
+    font-size: 1.125rem;
+  }
 `;
 
 const Buttons = styled.div`
@@ -132,6 +155,16 @@ const Buttons = styled.div`
   button {
     &:not(:last-of-type) {
       margin-right: 0.75rem;
+    }
+  }
+  @media screen and (max-width: ${$phoneWidth}) {
+    flex-direction: column;
+    button {
+      width: 100%;
+      margin-right: 0 !important;
+      &:not(:last-of-type) {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 `;
@@ -151,6 +184,9 @@ const Name = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 130%;
+    @media screen and (max-width: ${$phoneWidth}) {
+      font-size: 1.125rem;
+    }
   }
   span {
     color: ${$secondaryColor};
@@ -158,5 +194,9 @@ const Name = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 200%;
+    @media screen and (max-width: ${$phoneWidth}) {
+      font-size: 0.875rem;
+      line-height: 130%;
+    }
   }
 `;

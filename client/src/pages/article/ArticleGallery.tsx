@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { FC, useState } from 'react';
-import { $primaryColor } from '../../styled/variables';
+import { $phoneWidth, $primaryColor } from '../../styled/variables';
 import { IImage } from '../../interface';
 import { CheckImage } from '../../components/img/CheckImage';
 
@@ -14,7 +14,7 @@ export const ArticleGallery: FC<Props> = (props) => {
 
   return (
     <Wrapper>
-      <CheckImage src={images[active] ? images[active].url : null} size="30rem" />
+      <CheckImage src={images[active] ? images[active].url : null} />
       <Thumbnails>
         {images.map((image, index) => (
           <Thumbnail $active={index === active} onClick={() => setActive(index)} key={image.id}>
@@ -28,7 +28,15 @@ export const ArticleGallery: FC<Props> = (props) => {
 
 const Wrapper = styled.div`
   display: grid;
+  grid-template-columns: 30rem;
+  grid-template-rows: 30rem auto;
   gap: 1.5rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    grid-template-rows: 20rem auto;
+    grid-template-columns: 1fr;
+    margin: 0 -1rem;
+    gap: 0.25rem;
+  }
 `;
 
 const Thumbnails = styled.div`
@@ -36,6 +44,19 @@ const Thumbnails = styled.div`
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: 5rem;
   gap: 0.5rem;
+  @media screen and (max-width: ${$phoneWidth}) {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.25rem;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    > * {
+      min-width: 5rem;
+      max-width: 5rem;
+      height: 5rem;
+    }
+  }
 `;
 
 const Thumbnail = styled.div<{ $active: boolean }>`
