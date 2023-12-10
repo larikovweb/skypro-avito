@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit/react';
 import { useDispatch } from 'react-redux';
 import modal from './slices/modalSlice';
 import auth from './slices/authSlice';
+import article from './slices/articleSlice';
 import { authAPI } from './services/authService';
 import { userAPI } from './services/userService';
 import { articleAPI } from './services/articleService';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   [commentAPI.reducerPath]: commentAPI.reducer,
   modal,
   auth,
+  article,
 });
 
 export const setupStore = () => {

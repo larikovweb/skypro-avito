@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { ARTICLE_ROUTE } from '../../utils/consts';
 import { IArticle } from '../../interface';
 import { CheckImage } from '../img/CheckImage';
+import { formatDateMonth } from '../../helpers/date';
 
 type Props = {
   article: IArticle;
@@ -18,10 +19,10 @@ export const ArticleCard: FC<Props> = (props) => {
     <Wrapper to={`${ARTICLE_ROUTE}/${id}`}>
       <CheckImage src={images[0] ? images[0].url : null} size="16.875rem" />
       <Title>{title}</Title>
-      <Price>{price} ₽</Price>
+      <Price>{price.toLocaleString('ru-RU')} ₽</Price>
       <InfoList>
         <li>{user.city}</li>
-        <li>{created_on.slice(0, 10)}</li>
+        <li>{formatDateMonth(created_on)}</li>
       </InfoList>
     </Wrapper>
   );

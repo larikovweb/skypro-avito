@@ -7,10 +7,12 @@ import { ModalFeedback } from '../../components/modal/ModalFeedback';
 import { IImage, IUser } from '../../interface';
 import { userAPI } from '../../redux/services/userService';
 import { articleAPI } from '../../redux/services/articleService';
-import { useNavigate } from 'react-router-dom';
-import { MAIN_ROUTE } from '../../utils/consts';
+import { Link, useNavigate } from 'react-router-dom';
+import { MAIN_ROUTE, PROFILE_ROUTE, SELLER_PROFILE_ROUTE } from '../../utils/consts';
 import { CheckImage } from '../../components/img/CheckImage';
 import { useModal } from '../../hooks/useModal';
+import { PhoneButton } from '../../components/form/PhoneButton';
+import { formatDateMonthAge, formatDateMonth } from '../../helpers/date';
 
 type Props = {
   id: number;
@@ -19,7 +21,6 @@ type Props = {
   description: string;
   created_on: string;
   user: IUser;
-  myArticle?: boolean;
   images: IImage[];
 };
 
@@ -31,7 +32,7 @@ export const ArticleInfo: FC<Props> = (props) => {
   const { data: userActive } = userAPI.useGetActiveUserQuery({});
   const [deleteArticle, { status }] = articleAPI.useDeleteArticleMutation();
 
-  const myArtile = userActive?.id === user.id;
+  const myArticle = userActive?.id === user.id;
   const modalProps = {
     editable: true,
     formData: { title, price, description, id, localImages: images },
@@ -46,15 +47,15 @@ export const ArticleInfo: FC<Props> = (props) => {
     <Wrapper>
       <Title>{title}</Title>
       <InfoList>
-        <li>{created_on}</li>
+        <li>Опубликовано: {formatDateMonth(created_on)}</li>
         <li>{user.city}</li>
       </InfoList>
       <ModalControl id="feedback" modal={() => <ModalFeedback />}>
         <Feedback>23 отзыва</Feedback>
       </ModalControl>
-      <Price>{price} ₽</Price>
+      <Price>{price.toLocaleString('ru-RU')} ₽</Price>
       <Buttons>
-        {myArtile ? (
+        {myArticle ? (
           <>
             <Button onClick={() => open(modalProps)}>Редактировать</Button>
             <Button pending={status === 'pending'} onClick={removeArticle}>
@@ -62,17 +63,14 @@ export const ArticleInfo: FC<Props> = (props) => {
             </Button>
           </>
         ) : (
-          <MyButton>
-            <b>Показать телефон</b>
-            <span>{user.phone}</span>
-          </MyButton>
+          <PhoneButton phone={user.phone} email={user.email} />
         )}
       </Buttons>
-      <Seller>
+      <Seller to={myArticle ? PROFILE_ROUTE : `${SELLER_PROFILE_ROUTE}/${user.id}`}>
         <CheckImage type="avatar" size="2.5rem" src={user.avatar} />
         <Name>
           <b>{user.name}</b>
-          <span>{user.sells_from}</span>
+          <span>Продает товары с {formatDateMonthAge(user.sells_from)}</span>
         </Name>
       </Seller>
     </Wrapper>
@@ -128,26 +126,6 @@ const Price = styled.div`
   margin: 2rem 0 1.25rem;
 `;
 
-const MyButton = styled(Button)`
-  span {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-  b {
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 140%;
-  }
-  span {
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 140%;
-  }
-`;
-
 const Buttons = styled.div`
   display: flex;
   margin-bottom: 2rem;
@@ -158,7 +136,7 @@ const Buttons = styled.div`
   }
 `;
 
-const Seller = styled.div`
+const Seller = styled(Link)`
   display: flex;
   align-items: flex-start;
 `;

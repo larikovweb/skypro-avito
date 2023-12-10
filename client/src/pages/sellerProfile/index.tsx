@@ -2,32 +2,32 @@ import { FC } from 'react';
 import { Container, GeneralSubtitle, GeneralTitle } from '../../styled/components';
 import styled from '@emotion/styled';
 import { HelmetHead } from '../../components/seo/HelmetHead';
-import { ProfileSettings } from './ProfileSettings';
+import { ProfileView } from './ProfileView';
 import { ArticleCardList } from '../../components/article/ArticleCardList';
 import { articleAPI } from '../../redux/services/articleService';
 import { userAPI } from '../../redux/services/userService';
 import { isUndefined } from '@bunt/is';
+import { useParams } from 'react-router-dom';
+import { IUser } from '../../interface';
 
-const Profile: FC = () => {
+const SellerProfile: FC = () => {
+  const { id } = useParams<{ id: string }>();
+
   const {
     data: articles,
     isLoading,
     isError,
-  } = articleAPI.useGetMyArticlesQuery({ sorting: 'new' });
+  } = articleAPI.useGetArticlesQuery({ sorting: 'new', user_id: id });
 
-  const {
-    data: user,
-    isLoading: userLoading,
-    isError: userError,
-  } = userAPI.useGetActiveUserQuery({});
+  const { data: users, isLoading: userLoading, isError: userError } = userAPI.useGetUsersQuery({});
 
   const loading = userLoading && <div>Loading...</div>;
   const error = userError && <div>Error</div>;
-  const content = !isUndefined(user) && (
+  const content = !isUndefined(users) && (
     <>
-      <GeneralTitle>Здравствуйте, {user.name}!</GeneralTitle>
-      <ProfileSettings user={user} />
-      <SubTitle>Мои товары</SubTitle>
+      <GeneralTitle>Профиль продавца</GeneralTitle>
+      <ProfileView user={users.find((user) => user.id === Number(id)) as IUser} />
+      <SubTitle>Товары продавца</SubTitle>
       <ArticleCardList articles={articles} isError={isError} isLoading={isLoading} />
     </>
   );
@@ -48,4 +48,4 @@ const SubTitle = styled(GeneralSubtitle)`
   margin-bottom: 1.25rem;
 `;
 
-export default Profile;
+export default SellerProfile;

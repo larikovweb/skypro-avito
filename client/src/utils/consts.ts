@@ -1,9 +1,8 @@
 // ROUTES
 export const MAIN_ROUTE = '/';
 export const PROFILE_ROUTE = '/profile';
+export const SELLER_PROFILE_ROUTE = '/seller-profile';
 export const ARTICLE_ROUTE = '/article';
-export const MY_ARTICLE_ROUTE = '/my-article';
-export const ABOUT_ROUTE = '/about';
 export const NOT_FOUND_ROUTE = '*';
 
 // BREAKPOINTS
